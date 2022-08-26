@@ -9,8 +9,16 @@ datasource db {
 }
 
 model Customer {
-  id        Int      @id @default(autoincrement())
-  name      String
+  id Int @id @default(autoincrement())
+  name String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Contact {
+  id Int @id @default(autoincrement())
+  phone String
+  email String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
