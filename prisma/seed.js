@@ -8,7 +8,6 @@ async function seed() {
     },
     // include: { contact: true },
   });
-
   console.log("Customer created", createdCustomer);
 
   // Add your code here
@@ -21,8 +20,14 @@ async function seed() {
       // above: tells customerId column to pull from Customer table id 
     },
   });
-
   console.log("Contact created", createdContact);
+
+  const createdScreen = await prisma.screen.create({
+    data: {
+      number: 2,
+    },
+  });
+  console.log("Screen created", createdScreen);
 
   const createdMovie = await prisma.movie.create({
     data: {
@@ -30,16 +35,25 @@ async function seed() {
         runtimeMins: 120
     },
   });
-    
   console.log("Movie created", createdMovie);
 
   const createdScreening = await prisma.screening.create({
     data: {
-      startsAt: new Date("August 30, 2022 20:10:00")
+      // below: time date in ISO8601 format. 2022, August, 30th at T(ime) 20:10:00 UTC
+      startsAt: new Date("2022-08-30T20:10:00Z"),
+      movieId: createdMovie.id,
+      screenId: createdScreen.id
     },
   });
-
   console.log("Screening created", createdScreening);
+
+  const createdTicket = await prisma.ticket.create({
+    data: {
+      customerId: createdCustomer.id,
+      screeningId: createdScreening.id,
+    }
+  })
+  console.log("Ticket created", createdTicket);
 
   // Don't edit any of the code below this line
   process.exit(0);

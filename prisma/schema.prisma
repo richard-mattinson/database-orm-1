@@ -13,6 +13,7 @@ model Customer {
   id Int @id @default(autoincrement())
   name String
   contact Contact?
+  ticket Ticket[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -20,7 +21,8 @@ model Customer {
 model Contact {
   id Int @id @default(autoincrement())
   phone String
-  email String
+  email String @unique
+  // ticket Ticket[]
   // below: relation scalar field (used in the `@relation` attribute below)
   customerId Int @unique 
   // below: specifies that the customer column in the Contact table is pulled the Customer table above 
@@ -33,13 +35,40 @@ model Movie {
   id Int @id @default(autoincrement())
   title String @unique
   runtimeMins Int
+  screening Screening[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Screen {
+  id Int @id @default(autoincrement())
+  number Int 
+  screening Screening[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Screening {
   id Int @id @default(autoincrement())
+  movieId Int 
+  movie Movie @relation(fields: [movieId], references: [id])
+  screenId Int
+  screen Screen @relation(fields: [screenId], references: [id])
+  ticket Ticket[]
   startsAt DateTime
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model Ticket {
+  id Int @id @default(autoincrement())
+  customerId Int
+  customer Customer @relation(fields: [customerId], references: [id])
+  screeningId Int
+  screening Screening @relation(fields: [screeningId], references: [id])
+  // contactEmail String
+  // contact Contact @relation(fields: [contactEmail], references: [email])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
